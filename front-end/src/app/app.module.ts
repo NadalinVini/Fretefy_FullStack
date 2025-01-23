@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { HomeModule } from './modules/home/home.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { RouterModule } from '@angular/router';
+import { RegiaoModule } from './modules/regiao/regiao.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -14,13 +16,15 @@ import { RouterModule } from '@angular/router';
   imports: [
     BrowserModule,
     RouterModule,
-    
+
     HomeModule,
     ToolbarModule,
+    RegiaoModule,
 
+    HttpClientModule,
     AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

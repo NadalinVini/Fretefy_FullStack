@@ -1,3 +1,70 @@
-<p>
-  regiao works!
-</p>
+<div class="regiao-container">
+  <div class="form-size">
+    <button type="button" (click)="toggleFormulario()">
+      {{ mostrarFormulario ? 'Fechar Formulário' : 'Nova Região' }}
+    </button>
+    <br/>
+    <br/>
+    <div *ngIf="mostrarFormulario">
+      <form [formGroup]="regiaoForm" (ngSubmit)="salvarRegiao()">
+        <div class="form-group">
+          <div>
+            <label for="nome">Nome da Região</label>
+            <div class="form-input">
+              <input id="nome" formControlName="nome" type="text" placeholder="Nome da Região"/>
+            </div>
+          </div>
+          <label for="cidade">Selecione a Cidade</label>
+          <select id="cidade" [formControl]="cidadeControl">
+            <option value="">Selecione</option>
+            <option *ngFor="let cidade of cidadesDisponiveis" [ngValue]="cidade">
+              {{ cidade.nome }}
+            </option>
+          </select>
+        </div>
+
+        <button type="button" (click)="adicionarCidade()" [disabled]="!cidadeControl.value || cidadeControl.value === 'Selecione'">
+          Adicionar Cidade
+        </button>
+
+        <div *ngIf="cidadesSelecionadas.length > 0">
+          <h3>Cidades Selecionadas</h3>
+          <div *ngFor="let cidade of cidadesSelecionadas" class="cidade-item">
+            <input type="text" [value]="cidade.nome" readonly />
+            <button type="button" (click)="removerCidade(cidade)">Remover</button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button *ngIf="cidadesSelecionadas.length > 0" type="submit" [disabled]="regiaoForm.invalid">
+            {{ isEditing ? 'Atualizar' : 'Salvar' }}
+          </button>
+          <br/>
+          <button *ngIf="isEditing" type="button" (click)="cancelarEdicao()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let regiao of regioes$ | async">
+          <td>{{ regiao.nome }}</td>
+          <td>
+            <div class="table-form-actions">
+              <button (click)="editarRegiao(regiao.id)" [disabled]="!regiao.isActive">Editar</button>
+              <button *ngIf="!regiao.isActive" (click)="ativarRegiao(regiao.id)">Ativar</button>
+              <button *ngIf="regiao.isActive" (click)="inativarRegiao(regiao.id)">Inativar</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br/>
+    <button type="button" (click)="exportarParaExcel()">Exportar para Excel</button>
+  </div>
+</div>
